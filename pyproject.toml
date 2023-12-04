@@ -1,0 +1,19 @@
+[tool.poetry]
+name = "qcentroid-agent-cli"
+version = "0.1.0"
+description = "Library to interact with qcentroid agent api"
+authors = ["Your Name <you@example.com>"]
+license = "BSD"
+readme = "README.md"
+packages = [{include = "qcentroid_agent_cli"}]
+
+[tool.poetry.dependencies]
+python = "^3.11"
+requests = "^2.31.0"
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^7.4.3"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
