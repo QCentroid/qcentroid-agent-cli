@@ -2,10 +2,21 @@
 name = "qcentroid-agent-cli"
 version = "0.1.0"
 description = "Library to interact with qcentroid agent api"
-authors = ["Your Name <you@example.com>"]
-license = "BSD"
+authors = [
+  { name="QCentroid", email="info@qcentroid.xyz" }
+]
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    ]
+license = "MIT License"
+requires-python = ">=3.11"
 readme = "README.md"
 packages = [{include = "qcentroid_agent_cli"}]
+[project.urls]
+Homepage = "https://github.com/QCentroid/qcentroid-agent-api"
+Issues = "https://github.com/QCentroid/qcentroid-agent-api/issues"
 
 [tool.poetry.dependencies]
 python = "^3.11"
