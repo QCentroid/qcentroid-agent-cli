@@ -1,0 +1,24 @@
+name: Publish to PyPI.org
+on:
+  release:
+    types: [published]
+# .github/workflows/ci-cd.yml
+jobs:
+  pypi-publish:
+    name: Upload release to PyPI
+    runs-on: ubuntu-latest
+    environment:
+      name: pypi
+      url: https://pypi.org/p/qcentroid-agent-cli
+    permissions:
+      id-token: write  # IMPORTANT: this permission is mandatory for trusted publishing
+    steps:
+    - name: Check out the action locally
+      uses: actions/checkout@v3
+    - uses: actions/setup-python@v4
+      with:
+        python-version: '3.11'
+    - name: Install the packaging-related tools
+      run: python3 -m pip install build twine
+    - name: Publish package distributions to PyPI
+      uses: pypa/gh-action-pypi-publish@release/v1
