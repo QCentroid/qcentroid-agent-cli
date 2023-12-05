@@ -57,7 +57,7 @@ class QCentroidAgentClient:
             print(f"Unexpected Error: {e}")
             raise e
 
-    #POST /agent/job/{job_name}/data/output
+    #POST [core]/agent/job/{job_name}/data/output
     def sendData(self, data:dict) -> bool:
         
         try:
@@ -72,6 +72,29 @@ class QCentroidAgentClient:
             else:
                 print(f"Error: {response.status_code} - {response.text}")
                 response.raise_for_status()
+
+        except requests.RequestException as e:
+            print(f"Request failed: {e}")
+            raise e            
+        except Exception as e:
+            # Handle any exceptions or errors here
+            print(f"Unexpected Error: {e}")
+            raise e
+        
+
+    #POST /agent/job/{job_name}/data/output/additional
+    def sendData(self, filename:str) -> bool:
+        try:
+            with open(filename, "rb") as file:
+                response = requests.post(f"{self.base_url}/agent/job/{self.job_name}/data/output/additional", headers=self.getHeaders(), files={"file": file})
+                if response.status_code == 200:
+                    # Parse and use the response data as needed
+                    data = response.json()
+                    print("API Response:", data)
+                    return True
+                else:
+                    print(f"Error: {response.status_code} - {response.text}")
+                    response.raise_for_status()
 
         except requests.RequestException as e:
             print(f"Request failed: {e}")
