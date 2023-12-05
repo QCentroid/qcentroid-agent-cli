@@ -3,15 +3,13 @@ name = "qcentroid-agent-cli"
 version = "0.1.0"
 description = "Library to interact with qcentroid agent api"
 authors = [
-  { name="QCentroid", email="info@qcentroid.xyz" }
-]
+  "QCentroid <info@qcentroid.xyz>" ]
 classifiers = [
     "Programming Language :: Python :: 3",
     "License :: OSI Approved :: MIT License",
     "Operating System :: OS Independent",
     ]
 license = "MIT License"
-requires-python = ">=3.11"
 readme = "README.md"
 packages = [{include = "qcentroid_agent_cli"}]
 [project.urls]
