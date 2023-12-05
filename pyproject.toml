@@ -17,7 +17,7 @@ Homepage = "https://github.com/QCentroid/qcentroid-agent-api"
 Issues = "https://github.com/QCentroid/qcentroid-agent-api/issues"
 
 [tool.poetry.dependencies]
-python = "^3.11"
+python = "^3.8"
 requests = "^2.31.0"
 
 [tool.poetry.group.dev.dependencies]
