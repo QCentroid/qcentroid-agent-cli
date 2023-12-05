@@ -1,6 +1,6 @@
 # qcentroid-agent-cli
 
-![deploy to pypi](ttps://github.com/QCentroid/qcentroid-agent-cli/actions/workflows/publish.yml/badge.svg)
+![deploy to pypi](https://github.com/QCentroid/qcentroid-agent-cli/actions/workflows/publish.yml/badge.svg)
  
 Client library to interact with qcentroid agent API.
 
