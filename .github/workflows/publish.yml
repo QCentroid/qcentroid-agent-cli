@@ -23,6 +23,6 @@ jobs:
     - name: build project
       run: python3 -m poetry build
     - name: check package
-      run: python3 -m twine check dist
+      run: python3 -m twine check dist/*
     - name: Publish package distributions to PyPI
       uses: pypa/gh-action-pypi-publish@release/v1
