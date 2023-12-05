@@ -22,5 +22,7 @@ jobs:
       run: python3 -m pip install build twine poetry
     - name: build project
       run: python3 -m poetry build
+    - name: check package
+      run: python3 -m twine check
     - name: Publish package distributions to PyPI
       uses: pypa/gh-action-pypi-publish@release/v1
