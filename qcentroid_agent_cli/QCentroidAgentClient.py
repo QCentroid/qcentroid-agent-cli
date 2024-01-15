@@ -182,3 +182,13 @@ class QCentroidAgentClient:
             print(f"Unexpected Error: {e}")
             raise e
 
+    def start(self):
+        self.status(StatusEntity.RUNNING)
+    
+    def end(self):
+        self.status(StatusEntity.DONE)
+
+    def error(self, be:BaseException):
+        self.status(StatusEntity.FAILED)
+        self.sendExecutionLog(str(be)) 
+

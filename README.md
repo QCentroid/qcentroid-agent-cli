@@ -68,12 +68,13 @@ agent = QCentroidAgentClient(base_url)
 data = None
 try:
   agent.start()
-  //TODO job with data
-  agent.end()
+  data = agent.obtainData()
+  #TODO job with data  
   agent.sendData(data)
+  agent.end()
 catch BaseException be:
   agent.error(be)
-//end
+#end
 
 ```
   
