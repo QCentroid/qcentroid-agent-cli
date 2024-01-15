@@ -30,7 +30,7 @@ pip install qcentroid-agent-cli
 As external agent:
 
 ```python
-from qcentroid-agent-cli import QCentroidSolverClient
+from qcentroid_agent_cli import QCentroidSolverClient
 base_url="https://api.qcentroid.xyz"
 api_key="1234-4567-8910"
 solver_id="123"
@@ -58,7 +58,7 @@ if __name__ == "__main__":
 As agent:
 
 ```python
-from qcentroid-agent-cli import QCentroidAgentClient()
+from qcentroid_agent_cli import QCentroidAgentClient()
 
 base_url = "https://api.qcentroid.xyz"
 # job-id from EXECUTION_ID env var
@@ -72,7 +72,7 @@ try:
   #TODO job with data  
   agent.sendData(data)
   agent.end()
-catch BaseException be:
+except BaseException as be:
   agent.error(be)
 #end
 
