@@ -1,6 +1,7 @@
 from enum import Enum
+import json
 
-class Status(Enum):
+class Status(str, Enum):
     RUNNING = "running"
     PREPARING = "preparing"
     FAILED = "failed"

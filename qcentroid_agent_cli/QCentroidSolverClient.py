@@ -43,7 +43,7 @@ class QCentroidSolverClient:
                 # Parse and use the response data as needed
                 data = response.json()
                 print("API Response:", data)
-                return QCentroidAgentClient(self.base_url, data.token, data.job_id) #return  QCentroidAgentClient
+                return QCentroidAgentClient(self.base_url, data.token, data.job_id) #return configured instance of QCentroidAgentClient
             # No jobs
             if response.status_code == 204:                
                 return None
