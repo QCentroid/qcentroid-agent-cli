@@ -35,7 +35,7 @@ class QCentroidAgentClient:
         }
 
     #GET [core]/agent/job/{job_name}/data/input
-    def obtainData(self) -> dict:        
+    def obtainInputData(self) -> dict:        
 
         try:
             response = requests.get(f"{self.base_url}/agent/job/{self.job_id}/data/input", headers=self.getHeaders())
@@ -59,7 +59,7 @@ class QCentroidAgentClient:
             raise e
 
     #POST [core]/agent/job/{job_name}/data/output
-    def sendData(self, data:dict) -> bool:
+    def sendOutputData(self, data:dict) -> bool:
         
         try:
             response = requests.post(f"{self.base_url}/agent/job/{self.job_id}/data/output", json=data, headers=self.getHeaders())
@@ -84,7 +84,7 @@ class QCentroidAgentClient:
         
 
     #POST /agent/job/{job_name}/data/output/additional
-    def sendData(self, filename:str) -> bool:
+    def sendOutputData(self, filename:str) -> bool:
         try:
             with open(filename, "rb") as file:
                 response = requests.post(f"{self.base_url}/agent/job/{self.job_id}/data/output/additional", headers=self.getHeaders(), files={"file": file})
@@ -222,18 +222,21 @@ class QCentroidSolverClient:
         try:
             response = requests.get(f"{self.base_url}/agent/solver/{self.solver_id}/webhook", headers=self.getHeaders())
 
-            # Check if the request was successful (status code 200)
-            if response.status_code == 200:
-                # Parse and use the response data as needed
-                data = response.json()
-                print("API Response:", data)
-                return QCentroidAgentClient(self.base_url, data.token, data.job_id) #return  QCentroidAgentClient
-            # No jobs
-            if response.status_code == 204:                
-                return None
-            else:
-                print(f"Error: {response.status_code} - {response.text}")
-                response.raise_for_status()
+            
+            match response.status_code:
+                # Check if the request was successful (status code 200)            
+                case 200:
+                    # Parse and use the response data as needed
+                    data = response.json()
+                    print("API Response:", data)
+                    return QCentroidAgentClient(self.base_url, data.token, data.job_id) #return  QCentroidAgentClient
+                
+                # No jobs
+                case 204:                
+                    return None
+                case _:
+                    print(f"Error: {response.status_code} - {response.text}")
+                    response.raise_for_status()
 
         except requests.RequestException as e:
             print(f"Request failed: {e}")
