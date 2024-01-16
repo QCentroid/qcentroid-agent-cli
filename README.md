@@ -39,15 +39,32 @@ def main():
     
     print("Hello QCentroid Agent!")
     solver = QCentroidSolverClient(base_url, api_key, solver_id)
+    exit = False
+    while not exit: # put some escape function
+      try:
+        job = solver.obtainJob()
 
-    while True: # put some escape function
-        agent = solver.obtainJob()
+        if job :
+          try:
+            job.start()
+            input_data = job.obtainInputData()
+            output_data = {} 
+            #TODO: add your code here to generate output_data
+            job.sendOutputData(output_data)
+            #TODO: job.sendExecutionLog(logs)
+            job.end()              
+          except Exception as e:
+            # job execution has failed, notify the platform about the error
+            job.error(e)
+        else:        
+          # Wait for 1 minute before the next iteration
+          time.sleep(60)    
+      except requests.RequestException as e:
+        # parameters are incorrect, url, api-key or solver_id, or infrastructure
+        print(f"Request failed: {e}")
+        exit=True       
 
-        if agent :
-            execute_job(agent)
-
-        # Wait for 1 minute before the next iteration
-        time.sleep(60)
+      
    
 
 if __name__ == "__main__":
@@ -64,16 +81,16 @@ base_url = "https://api.qcentroid.xyz"
 # job-id from EXECUTION_ID env var
 # token from QCENTROID_TOKEN env var
 
-agent = QCentroidAgentClient(base_url)
+job = QCentroidAgentClient(base_url)
 data = None
 try:
-  agent.start()
-  data = agent.obtainData()
+  job.start()
+  data = job.obtainData()
   #TODO job with data  
-  agent.sendData(data)
-  agent.end()
+  job.sendData(data)
+  job.end()
 except BaseException as be:
-  agent.error(be)
+  job.error(be)
 #end
 
 ```
