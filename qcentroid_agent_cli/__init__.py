@@ -134,7 +134,7 @@ class QCentroidAgentClient:
     #GET [core]/agent/job/{job}/status
     def status(self) -> StatusEntity:
         try:
-            response = requests.get(f"{self.base_url}/agent/job/{self.job_id}/status", json=data, headers=self.getHeaders())
+            response = requests.get(f"{self.base_url}/agent/job/{self.job_id}/status", headers=self.getHeaders())
             
             # Check if the request was successful (status code 200)
             if response.status_code == 200:
