@@ -58,7 +58,7 @@ if __name__ == "__main__":
 As agent:
 
 ```python
-from qcentroid_agent_cli import QCentroidAgentClient()
+from qcentroid_agent_cli import QCentroidAgentClient
 
 base_url = "https://api.qcentroid.xyz"
 # job-id from EXECUTION_ID env var
