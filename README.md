@@ -78,13 +78,13 @@ SOLVER_ID="123"
 
 def main():
     exit = False
-    print("QCentroid Agent example!")
+    print("QCentroid Agent usage example")
     print("Starting...")
     
     # Initialize the agent and get the solver details and a valid access token
     solver = QCentroidSolverClient(API_BASE_URL, SOLVER_API_KEY, SOLVER_ID)
 
-    print("Solver initialization succesful.")
+    print("Solver initialization successful.")
 
     # Loop to request queued jobs until any exit condition you want to set
     while not exit:
