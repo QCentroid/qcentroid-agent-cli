@@ -39,10 +39,10 @@ solver_id="123"
 
 def main():
     
-    # Initialize the agent and get the solver details and a valid access token
+    # Get the solver details
     solver = QCentroidSolverClient(base_url, api_key, solver_id)
 
-    # Request a queued job (the oldest one will be returned)
+    # Request a queued job
     job = solver.obtainJob()
     
     # Notify start of job execution
@@ -59,7 +59,8 @@ def main():
     # Send the solver output data and execution logs to the platform
     job.sendOutputData(output_data)
     job.sendExecutionLog(logs)
-    
+
+    # End of job execution
     
     
 if __name__ == "__main__":
