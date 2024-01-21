@@ -66,7 +66,7 @@ if __name__ == "__main__":
     main() 
 ```
 
-### As external agent:
+### Example for external agents:
 
 ```python
 import requests
@@ -142,27 +142,3 @@ if __name__ == "__main__":
     main()
 
 ```
-
-### As agent:
-
-```python
-from qcentroid_agent_cli import QCentroidAgentClient
-
-base_url = "https://api.qcentroid.xyz"
-# job-id from EXECUTION_ID env var
-# token from QCENTROID_TOKEN env var
-
-job = QCentroidAgentClient(base_url)
-data = None
-try:
-  job.start()
-  data = job.obtainData()
-  #TODO job with data  
-  job.sendData(data)
-  job.end()
-except BaseException as be:
-  job.error(be)
-#end
-
-```
-  
