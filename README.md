@@ -32,40 +32,66 @@ As external agent:
 ```python
 from qcentroid_agent_cli import QCentroidSolverClient
 base_url="https://api.qcentroid.xyz"
-api_key="1234-4567-8910"
+api_key="1234-4567-8910"  # Get your solver API_KEY in the platform dashboard
 solver_id="123"
 
 def main():
-    
-    print("Hello QCentroid Agent!")
-    solver = QCentroidSolverClient(base_url, api_key, solver_id)
     exit = False
-    while not exit: # put some escape function
-      try:
-        job = solver.obtainJob()
+    print("QCentroid Agent example!")
+    print("Starting...")
+    
+    # Initialize the agent by getting the solver details and a valid access token
+    solver = QCentroidSolverClient(base_url, api_key, solver_id)
 
-        if job :
-          try:
-            job.start()
-            input_data = job.obtainInputData()
-            output_data = {} 
-            #TODO: add your code here to generate output_data
-            job.sendOutputData(output_data)
-            #TODO: job.sendExecutionLog(logs)
-            job.end()              
-          except Exception as e:
-            # job execution has failed, notify the platform about the error
-            job.error(e)
-        else:        
-          # Wait for 1 minute before the next iteration
-          time.sleep(60)    
-      except requests.RequestException as e:
-        # parameters are incorrect, url, api-key or solver_id, or infrastructure
-        print(f"Request failed: {e}")
-        exit=True       
+    print("Solver initialization succesful.")
 
-      
-   
+    # Loop to request queued jobs until any exit condition you want to set
+    while not exit:
+        try:
+            print("Checking for pending jobs...")
+            # Request a queued job (the oldest one will be returned)
+            job = solver.obtainJob()
+
+            if job :
+                print("New job received.")
+                # There is a job to be processed!
+                try:
+                    print("Processing job...")
+                    # Notify the platform we're starting to process this job
+                    job.start()
+                    # Retrieve the input data
+                    input_data = job.obtainInputData()
+                    output_data = {} 
+                    
+                    #
+                    # TODO: add your solver code here and generate output_data
+                    #
+
+                    print("Job processed successfully.")
+                    # Send the solver output data to the platform
+                    job.sendOutputData(output_data)
+                    # Send the solver execution logs to check them thorugh the platform dashboard
+                    # TODO: job.sendExecutionLog(logs)
+                    
+                    job.end()              
+                except Exception as e:
+                    # Job execution has failed, notify the platform about the error
+                    print("Error during job execution.")
+                    job.error(e)
+
+            else:        
+                # No queued jobs. Wait for 1 minute and check again
+                print("No pending jobs. Waiting for 1 minute...")
+                time.sleep(60)
+            
+        except requests.RequestException as e:
+            # QCentroid Agent failed to start
+            # Whether parameters are incorrect (URL, api-key or solver_id), or there are connectivity issues
+            print(f"QCentroid Agent: API request failed: {e}")
+            exit=True
+            
+    print("End.")
+
 
 if __name__ == "__main__":
     main()
