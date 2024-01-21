@@ -42,7 +42,7 @@ def main():
     print("Starting...")
     
     # Initialize the agent by getting the solver details and a valid access token
-    solver = None #QCentroidSolverClient(base_url, api_key, solver_id)
+    solver = QCentroidSolverClient(base_url, api_key, solver_id)
 
     print("Solver initialization succesful.")
 
