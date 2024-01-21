@@ -80,7 +80,7 @@ def main():
     print("QCentroid Agent example!")
     print("Starting...")
     
-    # Initialize the agent by getting the solver details and a valid access token
+    # Initialize the agent and get the solver details and a valid access token
     solver = QCentroidSolverClient(base_url, api_key, solver_id)
 
     print("Solver initialization succesful.")
