@@ -30,6 +30,7 @@ pip install qcentroid-agent-cli
 As external agent:
 
 ```python
+import requests
 from qcentroid_agent_cli import QCentroidSolverClient
 base_url="https://api.qcentroid.xyz"
 api_key="1234-4567-8910"  # Get your solver API_KEY in the platform dashboard
@@ -41,7 +42,7 @@ def main():
     print("Starting...")
     
     # Initialize the agent by getting the solver details and a valid access token
-    solver = QCentroidSolverClient(base_url, api_key, solver_id)
+    solver = None #QCentroidSolverClient(base_url, api_key, solver_id)
 
     print("Solver initialization succesful.")
 
@@ -85,9 +86,14 @@ def main():
                 time.sleep(60)
             
         except requests.RequestException as e:
-            # QCentroid Agent failed to start
+            # Error in an API request
             # Whether parameters are incorrect (URL, api-key or solver_id), or there are connectivity issues
             print(f"QCentroid Agent: API request failed: {e}")
+            exit=True
+            
+        except Exception as e:
+            # Any other errors
+            print(f"QCentroid Agent error: {e}")
             exit=True
             
     print("End.")
