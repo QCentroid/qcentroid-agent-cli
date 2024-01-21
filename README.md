@@ -27,7 +27,47 @@ pip install qcentroid-agent-cli
 
 ## Use
 
-As external agent:
+### Simple example
+
+As easy as this:
+
+```python
+import requests
+from qcentroid_agent_cli import QCentroidSolverClient
+base_url="https://api.qcentroid.xyz"
+api_key="1234-4567-8910"  # Get your solver API_KEY in the platform dashboard
+solver_id="123"
+
+def main():
+    
+    # Initialize the agent and get the solver details and a valid access token
+    solver = QCentroidSolverClient(base_url, api_key, solver_id)
+
+    # Request a queued job (the oldest one will be returned)
+    job = solver.obtainJob()
+    
+    # Notify start of job execution
+    job.start()
+    
+    # Retrieve the job input data
+    input_data = job.obtainInputData()
+    output_data = {} 
+
+    #
+    # TODO: Add your solver code here and generate output_data
+    #
+
+    # Send the solver output data and execution logs to the platform
+    job.sendOutputData(output_data)
+    job.sendExecutionLog(logs)
+    
+    
+    
+if __name__ == "__main__":
+    main() 
+```
+
+### As external agent:
 
 ```python
 import requests
@@ -104,7 +144,7 @@ if __name__ == "__main__":
 
 ```
 
-As agent:
+### As agent:
 
 ```python
 from qcentroid_agent_cli import QCentroidAgentClient
