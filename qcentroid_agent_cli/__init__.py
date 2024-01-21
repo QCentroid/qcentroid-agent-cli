@@ -3,7 +3,7 @@ import requests
 import json
 import os
 import mimetypes
-from qcentroid_agent_cli.model.StatusEntity import Status, StatusEntity
+from qcentroid_agent_cli.model import Status, StatusEntity
 
 import ssl
 
