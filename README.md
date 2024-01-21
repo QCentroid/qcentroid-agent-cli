@@ -32,7 +32,6 @@ pip install qcentroid-agent-cli
 As easy as this:
 
 ```python
-import requests
 from qcentroid_agent_cli import QCentroidSolverClient
 base_url="https://api.qcentroid.xyz"
 api_key="1234-4567-8910"  # Get your solver API_KEY in the platform dashboard
