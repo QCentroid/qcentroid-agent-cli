@@ -33,14 +33,14 @@ As easy as this:
 
 ```python
 from qcentroid_agent_cli import QCentroidSolverClient
-base_url="https://api.qcentroid.xyz"
-api_key="1234-4567-8910"  # Get your solver API_KEY in the platform dashboard
-solver_id="123"
+API_BASE_URL="https://api.qcentroid.xyz"
+SOLVER_API_KEY="1234-4567-8910"  # Get your solver API_KEY in the platform dashboard
+SOLVER_ID="123"
 
 def main():
     
     # Get the solver details
-    solver = QCentroidSolverClient(base_url, api_key, solver_id)
+    solver = QCentroidSolverClient(API_BASE_URL, SOLVER_API_KEY, SOLVER_ID)
 
     # Request a queued job
     job = solver.obtainJob()
@@ -72,9 +72,9 @@ if __name__ == "__main__":
 ```python
 import requests
 from qcentroid_agent_cli import QCentroidSolverClient
-base_url="https://api.qcentroid.xyz"
-api_key="1234-4567-8910"  # Get your solver API_KEY in the platform dashboard
-solver_id="123"
+API_BASE_URL="https://api.qcentroid.xyz"
+SOLVER_API_KEY="1234-4567-8910"  # Get your solver API_KEY in the platform dashboard
+SOLVER_ID="123"
 
 def main():
     exit = False
@@ -82,7 +82,7 @@ def main():
     print("Starting...")
     
     # Initialize the agent and get the solver details and a valid access token
-    solver = QCentroidSolverClient(base_url, api_key, solver_id)
+    solver = QCentroidSolverClient(API_BASE_URL, SOLVER_API_KEY, SOLVER_ID)
 
     print("Solver initialization succesful.")
 
