@@ -213,7 +213,7 @@ class QCentroidSolverClient:
 
     def getHeaders(self):
         return {
-            "Authorization": f"Bearer {self.api_key}",
+            "X-API-Key": self.api_key,
             "Accept": "application/json",  # Set the content type based on your API's requirements
             "Content-Type": "application/json",  # Set the content type based on your API's requirements
         }
