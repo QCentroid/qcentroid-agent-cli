@@ -25,7 +25,7 @@ class QCentroidAgentClient:
         if job_name is not None:             
             self.name = job_name
         else:
-            self.job_name = os.environ.get('EXECUTOR_ID')
+            self.name = os.environ.get('EXECUTOR_ID')
             
     def getHeaders(self):
         return {
