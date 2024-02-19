@@ -11,7 +11,7 @@ api_base_url = "https://api.qcentroid.xyz"
 
 class QCentroidAgentClient:
     # Init class with base parameters
-    def __init__(self, base_url=None, pat=None, job_id=None):
+    def __init__(self, base_url=None, pat=None, job_name=None):
         self.base_url = api_base_url #default production url
         
         if base_url is not None:
@@ -22,10 +22,10 @@ class QCentroidAgentClient:
             self.pat = pat
         else:
             self.pat = os.environ.get('QCENTROID_TOKEN')
-        if job_id is not None:             
-            self.job_id = job_id
+        if job_name is not None:             
+            self.name = job_name
         else:
-            self.job_id = os.environ.get('EXECUTOR_ID')
+            self.job_name = os.environ.get('EXECUTOR_ID')
             
     def getHeaders(self):
         return {
