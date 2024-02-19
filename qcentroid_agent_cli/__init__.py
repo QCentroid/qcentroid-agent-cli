@@ -38,7 +38,7 @@ class QCentroidAgentClient:
     def obtainInputData(self) -> dict:        
 
         try:
-            response = requests.get(f"{self.base_url}/agent/job/{self.job_id}/data/input", headers=self.getHeaders())
+            response = requests.get(f"{self.base_url}/agent/job/{self.name}/data/input", headers=self.getHeaders())
 
             # Check if the request was successful (status code 200)
             if response.status_code == 200:
@@ -62,7 +62,7 @@ class QCentroidAgentClient:
     def sendOutputData(self, data:dict) -> bool:
         
         try:
-            response = requests.post(f"{self.base_url}/agent/job/{self.job_id}/data/output", json=data, headers=self.getHeaders())
+            response = requests.post(f"{self.base_url}/agent/job/{self.name}/data/output", json=data, headers=self.getHeaders())
             
             # Check if the request was successful (status code 200)
             if response.status_code == 200:
@@ -87,7 +87,7 @@ class QCentroidAgentClient:
     def sendOutputData(self, filename:str) -> bool:
         try:
             with open(filename, "rb") as file:
-                response = requests.post(f"{self.base_url}/agent/job/{self.job_id}/data/output/additional", headers=self.getHeaders(), files={"file": file})
+                response = requests.post(f"{self.base_url}/agent/job/{self.name}/data/output/additional", headers=self.getHeaders(), files={"file": file})
                 if response.status_code == 200:
                     # Parse and use the response data as needed
                     data = response.json()
@@ -110,7 +110,7 @@ class QCentroidAgentClient:
         try:
            
             with open(filename, "rb") as file:
-                response = requests.post(f"{self.base_url}/agent/job/{self.job_id}/execution-log", headers=self.getHeaders(), files={"file": file})
+                response = requests.post(f"{self.base_url}/agent/job/{self.name}/execution-log", headers=self.getHeaders(), files={"file": file})
                 if response.status_code == 200:
                     # Parse and use the response data as needed
                     data = response.json()
@@ -134,7 +134,7 @@ class QCentroidAgentClient:
     #GET [core]/agent/job/{job}/status
     def status(self) -> StatusEntity:
         try:
-            response = requests.get(f"{self.base_url}/agent/job/{self.job_id}/status", headers=self.getHeaders())
+            response = requests.get(f"{self.base_url}/agent/job/{self.name}/status", headers=self.getHeaders())
             
             # Check if the request was successful (status code 200)
             if response.status_code == 200:
@@ -161,7 +161,7 @@ class QCentroidAgentClient:
     #POST [core]/agent/job/{job}/status
     def status(self, data:StatusEntity) -> bool:
         try:
-            response = requests.post(f"{self.base_url}/agent/job/{self.job_id}/status", headers=self.getHeaders(), json=data.to_dict())
+            response = requests.post(f"{self.base_url}/agent/job/{self.name}/status", headers=self.getHeaders(), json=data.to_dict())
             if response.status_code == 200:
                 # Parse and use the response data as needed
                 data = response.json()
