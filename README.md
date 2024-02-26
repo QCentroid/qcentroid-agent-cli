@@ -146,4 +146,4 @@ if __name__ == "__main__":
 
 ## Versioning
 
-Update manually on main the `pyproject.toml` the `version` field to match the next release tag. Launch a new version on Releases section selecting a new tag matching the version. Create the release. The release will be published on pypi.org
+Update manually on main the `pyproject.toml` the `version` field to match the next release tag. Launch a (new version on Releases)[https://github.com/QCentroid/qcentroid-agent-cli/releases/new] section selecting a new tag matching the version. Create the release. The release will be published on pypi.org
