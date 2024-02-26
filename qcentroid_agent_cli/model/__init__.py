@@ -2,10 +2,11 @@ from enum import Enum
 import json
 
 class Status(str, Enum):
-    RUNNING = "running"
-    PREPARING = "preparing"
-    FAILED = "failed"
-    DONE = "done"
+    PENDING = "PENDING"
+    RUNNING = "RUNNING"
+    PREPARING = "PREPARING"
+    ERROR = "ERROR"
+    FINISHED = "FINISHED"
 
 class StatusEntity:
     def __init__(self, state):
