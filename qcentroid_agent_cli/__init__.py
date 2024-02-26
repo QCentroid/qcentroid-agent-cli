@@ -84,7 +84,7 @@ class QCentroidAgentClient:
         
 
     #POST /agent/job/{job_name}/data/output/additional
-    def sendOutputData(self, filename:str) -> bool:
+    def sendAdditionalOutputFile(self, filename:str) -> bool:
         try:
             with open(filename, "rb") as file:
                 response = requests.post(f"{self.base_url}/agent/job/{self.name}/data/output/additional", headers=self.getHeaders(), files={"file": file})
