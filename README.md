@@ -33,6 +33,9 @@ As easy as this:
 
 ```python
 from qcentroid_agent_cli import QCentroidSolverClient
+import logging
+
+logging.basicConfig(level=logging.DEBUG)
 API_BASE_URL="https://api.qcentroid.xyz"
 SOLVER_API_KEY="1234-4567-8910"  # Get your solver API_KEY in the platform dashboard
 SOLVER_ID="123"
@@ -72,6 +75,10 @@ if __name__ == "__main__":
 ```python
 import requests
 from qcentroid_agent_cli import QCentroidSolverClient
+import logging
+
+logging.basicConfig(level=logging.DEBUG)
+logger = logging.getLogger(__name__)
 API_BASE_URL="https://api.qcentroid.xyz"
 SOLVER_API_KEY="1234-4567-8910"  # Get your solver API_KEY in the platform dashboard
 SOLVER_ID="123"
