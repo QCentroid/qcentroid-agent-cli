@@ -86,7 +86,7 @@ class QCentroidAgentClient:
         file = data2file(data)
         
         try:
-            response = requests.post(f"{self.base_url}/agent/job/{self.name}/data/output", json=data, headers=self.getHeaders(), files={"file": file})
+            response = requests.post(f"{self.base_url}/agent/job/{self.name}/data/output", headers=self.getHeaders(), files={"file": file})
             
             # Check if the request was successful (status code 200)
             if response.status_code == 200:
