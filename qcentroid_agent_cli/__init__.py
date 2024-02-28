@@ -249,20 +249,18 @@ class QCentroidSolverClient:
             response = requests.get(f"{self.base_url}/agent/solver/{self.solver_id}/webhook", headers=self.getHeaders())
 
             
-            match response.status_code:
-                # Check if the request was successful (status code 200)            
-                case 200:
-                    # Parse and use the response data as needed
-                    data = processJsonData(response)
-                    logger.info(f"API Response:{data}")
-                    return QCentroidAgentClient(self.base_url, data["token"], data["name"]) #return  QCentroidAgentClient
+            if response.status_code == 200:
+                # Parse and use the response data as needed
+                data = processJsonData(response)
+                logger.info(f"API Response:{data}")
+                return QCentroidAgentClient(self.base_url, data["token"], data["name"]) #return  QCentroidAgentClient
                 
                 # No jobs
-                case 204:                
-                    return None
-                case _:
-                    logger.error(f"Error: {response.status_code} - {response.text}")
-                    response.raise_for_status()
+            elif response.status_code == 204:                
+                return None
+            else:
+                logger.error(f"Error: {response.status_code} - {response.text}")
+                response.raise_for_status()
 
         except requests.RequestException as e:
             logger.error(f"Request failed: {e}", e)
