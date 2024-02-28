@@ -3,6 +3,7 @@ import requests
 import json
 import os
 import mimetypes
+from io import BytesIO
 from qcentroid_agent_cli.model import Status, StatusEntity
 
 import ssl
@@ -22,6 +23,16 @@ def processJsonData(response):
     else:
         data = response.json()
     return data
+
+def data2file(data:dict):
+    # Serialize the dictionary to JSON
+    json_data = json.dumps(data)
+
+    # Encode the JSON string as bytes
+    file_content = json_data.encode()
+
+    # Create a file-like object using BytesIO    
+    return BytesIO(file_content)
 
 class QCentroidAgentClient:
     # Init class with base parameters
@@ -58,10 +69,10 @@ class QCentroidAgentClient:
             if response.status_code == 200:
                 # Parse and use the response data as needed                
                 data = processJsonData(response)            
-                print("API Response:", data)
+                logger.debug(f"API Response:{data}")
                 return data #return json 
             else:
-                print(f"Error: {response.status_code} - {response.text}")
+                logger.error(f"Error: {response.status_code} - {response.text}")
                 response.raise_for_status()
 
         except requests.RequestException as e:
@@ -75,17 +86,19 @@ class QCentroidAgentClient:
     #POST [core]/agent/job/{job_name}/data/output
     def sendOutputData(self, data:dict) -> bool:
         
+        file = data2file(data)
+        
         try:
-            response = requests.post(f"{self.base_url}/agent/job/{self.name}/data/output", json=data, headers=self.getHeaders())
+            response = requests.post(f"{self.base_url}/agent/job/{self.name}/data/output", json=data, headers=self.getHeaders(), files={"file": file})
             
             # Check if the request was successful (status code 200)
             if response.status_code == 200:
                 # Parse and use the response data as needed
                 data = processJsonData(response)
-                print("API Response:", data)
+                logger.debug(f"API Response:{data}")
                 return True
             else:
-                print(f"Error: {response.status_code} - {response.text}")
+                logger.error(f"Error: {response.status_code} - {response.text}")
                 response.raise_for_status()
 
         except requests.RequestException as e:
@@ -105,10 +118,10 @@ class QCentroidAgentClient:
                 if response.status_code == 200:
                     # Parse and use the response data as needed
                     data = processJsonData(response)
-                    print("API Response:", data)
+                    logger.debug(f"API Response:{data}")
                     return True
                 else:
-                    print(f"Error: {response.status_code} - {response.text}")
+                    logger.error(f"Error: {response.status_code} - {response.text}")
                     response.raise_for_status()
 
         except requests.RequestException as e:
@@ -128,10 +141,10 @@ class QCentroidAgentClient:
                 if response.status_code == 200:
                     # Parse and use the response data as needed
                     data = processJsonData(response)
-                    print("API Response:", data)
+                    logger.debug(f"API Response:{data}")
                     return True
                 else:
-                    print(f"Error: {response.status_code} - {response.text}")
+                    logger.error(f"Error: {response.status_code} - {response.text}")
                     response.raise_for_status()
                 
             
@@ -154,7 +167,7 @@ class QCentroidAgentClient:
             if response.status_code == 200:
                 # Parse and use the response data as needed
                 data = processJsonData(response)
-                print("API Response:", data)
+                logger.debug(f"API Response:{data}")
                 current_status = StatusEntity.from_dict(data)
                 return current_status
             else:
@@ -177,8 +190,8 @@ class QCentroidAgentClient:
             response = requests.post(f"{self.base_url}/agent/job/{self.name}/status", headers=self.getHeaders(), json=data.to_dict())
             if response.status_code == 200:
                 # Parse and use the response data as needed
-                data = response.json()
-                print("API Response:", data)
+                data = processJsonData(response)
+                logger.debug(f"API Response:{data}")
                 return True
             else:
                 logger.error(f"Error: {response.status_code} - {response.text}")
@@ -241,20 +254,20 @@ class QCentroidSolverClient:
                 case 200:
                     # Parse and use the response data as needed
                     data = processJsonData(response)
-                    print("API Response:", data)
+                    logger.info(f"API Response:{data}")
                     return QCentroidAgentClient(self.base_url, data["token"], data["name"]) #return  QCentroidAgentClient
                 
                 # No jobs
                 case 204:                
                     return None
                 case _:
-                    print(f"Error: {response.status_code} - {response.text}")
+                    logger.error(f"Error: {response.status_code} - {response.text}")
                     response.raise_for_status()
 
         except requests.RequestException as e:
-            print(f"Request failed: {e}")
+            logger.error(f"Request failed: {e}", e)
             raise e            
         except Exception as e:
             # Handle any exceptions or errors here
-            print(f"Unexpected Error: {e}")
+            logger.error(f"Unexpected Error: {e}", e)
             raise e
