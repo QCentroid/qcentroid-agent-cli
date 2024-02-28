@@ -6,8 +6,11 @@ import mimetypes
 from qcentroid_agent_cli.model import Status, StatusEntity
 
 import ssl
+import logging
 
 api_base_url = "https://api.qcentroid.xyz"
+
+logger = logging.getLogger(__name__)
 
 def processJsonData(response):
     data = {}
@@ -62,11 +65,11 @@ class QCentroidAgentClient:
                 response.raise_for_status()
 
         except requests.RequestException as e:
-            print(f"Request failed: {e}")
+            logger.error(f"Request failed: {e}", e)
             raise e            
         except Exception as e:
             # Handle any exceptions or errors here
-            print(f"Unexpected Error: {e}")
+            logger.error(f"Unexpected Error: {e}", e)            
             raise e
 
     #POST [core]/agent/job/{job_name}/data/output
@@ -86,11 +89,11 @@ class QCentroidAgentClient:
                 response.raise_for_status()
 
         except requests.RequestException as e:
-            print(f"Request failed: {e}")
+            logger.error(f"Request failed: {e}", e)
             raise e            
         except Exception as e:
             # Handle any exceptions or errors here
-            print(f"Unexpected Error: {e}")
+            logger.error(f"Unexpected Error: {e}", e)
             raise e
         
 
@@ -109,11 +112,11 @@ class QCentroidAgentClient:
                     response.raise_for_status()
 
         except requests.RequestException as e:
-            print(f"Request failed: {e}")
+            logger.error(f"Request failed: {e}", e)
             raise e            
         except Exception as e:
             # Handle any exceptions or errors here
-            print(f"Unexpected Error: {e}")
+            logger.error(f"Unexpected Error: {e}", e)
             raise e
 
     #GET [core]/agent/job/{job}/execution-log
@@ -133,14 +136,14 @@ class QCentroidAgentClient:
                 
             
         except FileNotFoundError as e:
-            print(f"Error: {e}")
+            logger.error(f"FileError: {e}", e)
             raise e
         except ValueError as e:
-            print(f"Error: {e}")
+            logger.error(f"Error: {e}", e)
             raise e
         except Exception as e:
             # Handle any other unexpected exceptions here
-            print(f"Unexpected Error: {e}")
+            logger.error(f"Unexpected Error: {e}", e)
             raise e        
     #GET [core]/agent/job/{job}/status
     def status(self) -> StatusEntity:
@@ -155,18 +158,17 @@ class QCentroidAgentClient:
                 current_status = StatusEntity.from_dict(data)
                 return current_status
             else:
-                print(f"Error: {response.status_code} - {response.text}")
-                
+                logger.error(f"Error: {response.status_code} - {response.text}")
                 response.raise_for_status()
         except FileNotFoundError as e:
-            print(f"Error: {e}")
+            logger.error(f"Error: {e}", e)
             raise e
         except ValueError as e:
-            print(f"Error: {e}")
+            logger.error(f"Error: {e}", e)
             raise e
         except Exception as e:
             # Handle any other unexpected exceptions here
-            print(f"Unexpected Error: {e}")
+            logger.error(f"Unexpected Error: {e}", e)
             raise e
 
     #POST [core]/agent/job/{job}/status
@@ -175,23 +177,23 @@ class QCentroidAgentClient:
             response = requests.post(f"{self.base_url}/agent/job/{self.name}/status", headers=self.getHeaders(), json=data.to_dict())
             if response.status_code == 200:
                 # Parse and use the response data as needed
-                data = processJsonData(response)
+                data = response.json()
                 print("API Response:", data)
                 return True
             else:
-                print(f"Error: {response.status_code} - {response.text}")
+                logger.error(f"Error: {response.status_code} - {response.text}")
                 response.raise_for_status()
 
             return response.id
         except FileNotFoundError as e:
-            print(f"Error: {e}")
+            logger.error(f"Error: {e}")
             raise e
         except ValueError as e:
-            print(f"Error: {e}")
+            logger.error(f"Error: {e}")
             raise e
         except Exception as e:
             # Handle any other unexpected exceptions here
-            print(f"Unexpected Error: {e}")
+            logger.error(f"Unexpected Error: {e}")
             raise e
 
     def start(self):
