@@ -47,7 +47,7 @@ class QCentroidAgentClient:
                 if 'Transfer-Encoding' in response.headers and response.headers['Transfer-Encoding'] == 'chunked':
                     datab=b""
                     for chunk in response.iter_content(chunk_size=1024):
-                    datab += chunk                    
+                        datab += chunk                    
                     data = json.loads(datab)
                 else:
                   data = response.json()
