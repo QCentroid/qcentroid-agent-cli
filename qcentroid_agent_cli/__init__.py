@@ -9,6 +9,17 @@ import ssl
 
 api_base_url = "https://api.qcentroid.xyz"
 
+def processJsonData(response):
+    data = {}
+    if 'Transfer-Encoding' in response.headers and response.headers['Transfer-Encoding'] == 'chunked':
+        datab=b""
+        for chunk in response.iter_content(chunk_size=1024):
+            datab += chunk                    
+        data = json.loads(datab)
+    else:
+        data = response.json()
+    return data
+
 class QCentroidAgentClient:
     # Init class with base parameters
     def __init__(self, base_url=None, pat=None, job_name=None):
@@ -43,14 +54,7 @@ class QCentroidAgentClient:
             # Check if the request was successful (status code 200)
             if response.status_code == 200:
                 # Parse and use the response data as needed                
-                data={}
-                if 'Transfer-Encoding' in response.headers and response.headers['Transfer-Encoding'] == 'chunked':
-                    datab=b""
-                    for chunk in response.iter_content(chunk_size=1024):
-                        datab += chunk                    
-                    data = json.loads(datab)
-                else:
-                  data = response.json()
+                data = processJsonData(response)            
                 print("API Response:", data)
                 return data #return json 
             else:
@@ -74,7 +78,7 @@ class QCentroidAgentClient:
             # Check if the request was successful (status code 200)
             if response.status_code == 200:
                 # Parse and use the response data as needed
-                data = response.json()
+                data = processJsonData(response)
                 print("API Response:", data)
                 return True
             else:
@@ -97,7 +101,7 @@ class QCentroidAgentClient:
                 response = requests.post(f"{self.base_url}/agent/job/{self.name}/data/output/additional", headers=self.getHeaders(), files={"file": file})
                 if response.status_code == 200:
                     # Parse and use the response data as needed
-                    data = response.json()
+                    data = processJsonData(response)
                     print("API Response:", data)
                     return True
                 else:
@@ -120,7 +124,7 @@ class QCentroidAgentClient:
                 response = requests.post(f"{self.base_url}/agent/job/{self.name}/execution-log", headers=self.getHeaders(), files={"file": file})
                 if response.status_code == 200:
                     # Parse and use the response data as needed
-                    data = response.json()
+                    data = processJsonData(response)
                     print("API Response:", data)
                     return True
                 else:
@@ -146,7 +150,7 @@ class QCentroidAgentClient:
             # Check if the request was successful (status code 200)
             if response.status_code == 200:
                 # Parse and use the response data as needed
-                data = response.json()
+                data = processJsonData(response)
                 print("API Response:", data)
                 current_status = StatusEntity.from_dict(data)
                 return current_status
@@ -171,7 +175,7 @@ class QCentroidAgentClient:
             response = requests.post(f"{self.base_url}/agent/job/{self.name}/status", headers=self.getHeaders(), json=data.to_dict())
             if response.status_code == 200:
                 # Parse and use the response data as needed
-                data = response.json()
+                data = processJsonData(response)
                 print("API Response:", data)
                 return True
             else:
@@ -234,7 +238,7 @@ class QCentroidSolverClient:
                 # Check if the request was successful (status code 200)            
                 case 200:
                     # Parse and use the response data as needed
-                    data = response.json()
+                    data = processJsonData(response)
                     print("API Response:", data)
                     return QCentroidAgentClient(self.base_url, data["token"], data["name"]) #return  QCentroidAgentClient
                 
