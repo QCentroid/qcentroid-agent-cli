@@ -52,7 +52,7 @@ class QCentroidAgentClient:
     def obtainInputData(self) -> dict:        
 
         try:
-            response = requests.get(f"{self.base_url}/agent/job/{self.name}/data/input", headers=self.getHeaders())
+            response = requests.get(f"{self.base_url}/agent/job/{self.name}/data/input", headers=self.getHeaders(), stream=True)
 
             # Check if the request was successful (status code 200)
             if response.status_code == 200:
