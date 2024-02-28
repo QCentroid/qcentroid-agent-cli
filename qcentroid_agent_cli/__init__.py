@@ -3,7 +3,7 @@ import requests
 import json
 import os
 import mimetypes
-from io import BytesIO
+from io import StringIO
 from qcentroid_agent_cli.model import Status, StatusEntity
 
 import ssl
@@ -25,14 +25,11 @@ def processJsonData(response):
     return data
 
 def data2file(data:dict):
-    # Serialize the dictionary to JSON
-    json_data = json.dumps(data)
+    # Convert dictionary to JSON string
+    json_data:str = json.dumps(data)
 
-    # Encode the JSON string as bytes
-    file_content = json_data.encode()
-
-    # Create a file-like object using BytesIO    
-    return BytesIO(file_content)
+    # Convert JSON string to a BufferedReader
+    return StringIO(json_data)    
 
 class QCentroidAgentClient:
     # Init class with base parameters
