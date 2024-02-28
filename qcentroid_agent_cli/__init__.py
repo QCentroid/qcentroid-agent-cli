@@ -42,8 +42,15 @@ class QCentroidAgentClient:
 
             # Check if the request was successful (status code 200)
             if response.status_code == 200:
-                # Parse and use the response data as needed
-                data = response.json()
+                # Parse and use the response data as needed                
+                data={}
+                if 'Transfer-Encoding' in response.headers and response.headers['Transfer-Encoding'] == 'chunked':
+                    datab=b""
+                    for chunk in response.iter_content(chunk_size=1024):
+                    datab += chunk                    
+                    data = json.loads(datab)
+                else:
+                  data = response.json()
                 print("API Response:", data)
                 return data #return json 
             else:
