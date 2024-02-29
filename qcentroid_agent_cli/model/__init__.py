@@ -21,3 +21,5 @@ class StatusEntity:
     @classmethod
     def from_dict(cls, data):
         return cls(state=data["state"])
+    
+__all__ = ['Status', 'StatusEntity']

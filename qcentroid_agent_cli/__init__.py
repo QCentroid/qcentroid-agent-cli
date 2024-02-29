@@ -14,36 +14,42 @@ api_base_url = "https://api.qcentroid.xyz"
 
 logger = logging.getLogger(__name__)
 
-def processJsonData(response):
-    data = {}
-    if 'Transfer-Encoding' in response.headers and response.headers['Transfer-Encoding'] == 'chunked':
-        datab=b""
-        for chunk in response.iter_content(chunk_size=1024):
-            datab += chunk                    
-        data = json.loads(datab)
-    else:
-        data = response.json()
-    return data
+class QCentroidBaseClient():
+    
+    @staticmethod
+    def processJsonData(response):
+        data = {}
+        if 'Transfer-Encoding' in response.headers and response.headers['Transfer-Encoding'] == 'chunked':
+            datab=b""
+            for chunk in response.iter_content(chunk_size=1024):
+                datab += chunk                    
+            data = json.loads(datab)
+        else:
+            data = response.json()
+        return data
+    
+    @staticmethod
+    def data2file(data:dict):
+        # Convert dictionary to JSON string
+        json_data:str = json.dumps(data)
 
-def data2file(data:dict):
-    # Convert dictionary to JSON string
-    json_data:str = json.dumps(data)
+        # Convert JSON string to a BufferedReader
+        return StringIO(json_data)    
 
-    # Convert JSON string to a BufferedReader
-    return StringIO(json_data)    
+    @staticmethod
+    def getVersion()->str:
+        # compatible with python 3.7 version
+        if sys.version_info >= (3, 8):
+            from importlib import metadata
+        else:
+            import importlib_metadata as metadata
 
-def obtainCurrentVersion():
-    # compatible with python 3.7 version
-    if sys.version_info >= (3, 8):
-        from importlib import metadata
-    else:
-        import importlib_metadata as metadata
+        if __name__:
+            return metadata.version(__name__)
+    
+        return "unknown"
 
-    if __name__:
-      return metadata.version(__name__)
-    return "unknown"
-
-class QCentroidAgentClient:
+class QCentroidAgentClient(QCentroidBaseClient):
     # Init class with base parameters
     def __init__(self, base_url=None, pat=None, job_name=None):
         self.base_url = api_base_url #default production url
@@ -60,9 +66,6 @@ class QCentroidAgentClient:
             self.name = job_name
         else:
             self.name = os.environ.get('EXECUTOR_ID')
-    @staticmethod
-    def getVersion()->str:
-        return obtainCurrentVersion()
             
     def getHeaders(self):
         return {
@@ -80,7 +83,7 @@ class QCentroidAgentClient:
             # Check if the request was successful (status code 200)
             if response.status_code == 200:
                 # Parse and use the response data as needed                
-                data = processJsonData(response)            
+                data = self.__class__.processJsonData(response)            
                 logger.debug(f"API Response:{data}")
                 return data #return json 
             else:
@@ -98,7 +101,7 @@ class QCentroidAgentClient:
     #POST [core]/agent/job/{job_name}/data/output
     def sendOutputData(self, data:dict) -> bool:
         
-        file = data2file(data)     
+        file = self.__class__.data2file(data)     
         
         headers = self.getHeaders()
 
@@ -114,7 +117,7 @@ class QCentroidAgentClient:
             # Check if the request was successful (status code 200)
             if response.status_code == 200:
                 # Parse and use the response data as needed
-                data = processJsonData(response)
+                data = self.__class__.processJsonData(response)
                 logger.debug(f"API Response:{data}")
                 return True
             else:
@@ -143,7 +146,7 @@ class QCentroidAgentClient:
                 response = requests.post(f"{self.base_url}/agent/job/{self.name}/data/output/additional", headers=headers, data=m)
                 if response.status_code == 200:
                     # Parse and use the response data as needed
-                    data = processJsonData(response)
+                    data = self.__class__.processJsonData(response)
                     logger.debug(f"API Response:{data}")
                     return True
                 else:
@@ -173,7 +176,7 @@ class QCentroidAgentClient:
                 response = requests.post(f"{self.base_url}/agent/job/{self.name}/execution-log", headers=headers, data=m)                
                 if response.status_code == 200:
                     # Parse and use the response data as needed
-                    data = processJsonData(response)
+                    data = self.__class__.processJsonData(response)
                     logger.debug(f"API Response:{data}")
                     return True
                 else:
@@ -197,7 +200,7 @@ class QCentroidAgentClient:
             # Check if the request was successful (status code 200)
             if response.status_code == 200:
                 # Parse and use the response data as needed
-                data = processJsonData(response)
+                data = self.__class__.processJsonData(response)
                 logger.debug(f"API Response:{data}")
                 current_status = StatusEntity.from_dict(data)
                 return current_status
@@ -219,7 +222,7 @@ class QCentroidAgentClient:
             response = requests.post(f"{self.base_url}/agent/job/{self.name}/status", headers=self.getHeaders(), json=data.to_dict())
             if response.status_code == 200:
                 # Parse and use the response data as needed
-                data = processJsonData(response)
+                data = self.__class__.processJsonData(response)
                 logger.debug(f"API Response:{data}")
                 return True
             else:
@@ -248,7 +251,7 @@ class QCentroidAgentClient:
         self.status(StatusEntity(Status.ERROR))
         self.sendExecutionLog(str(be)) 
 
-class QCentroidSolverClient:
+class QCentroidSolverClient(QCentroidBaseClient):
     # Init class with base parameters
     def __init__(self, base_url=None, api_key=None, solver_id=None):
         self.base_url = api_base_url #default production url
@@ -265,10 +268,6 @@ class QCentroidSolverClient:
             self.solver_id = solver_id
         else:
             self.solver_id = os.environ.get('QCENTROID_SOLVER_ID')
-            
-    @staticmethod
-    def getVersion()->str:
-        return obtainCurrentVersion()
 
     def getHeaders(self):
         return {
@@ -284,7 +283,7 @@ class QCentroidSolverClient:
             
             if response.status_code == 200:
                 # Parse and use the response data as needed
-                data = processJsonData(response)
+                data = self.__class__.processJsonData(response)
                 logger.info(f"API Response:{data}")
                 return QCentroidAgentClient(self.base_url, data["token"], data["name"]) #return  QCentroidAgentClient
                 
@@ -302,3 +301,5 @@ class QCentroidSolverClient:
             # Handle any exceptions or errors here
             logger.exception(f"Unexpected Error: ", str(e))
             raise e
+        
+__all__ = ['QCentroidBaseClient','QCentroidAgentClient', 'QCentroidSolverClient']
