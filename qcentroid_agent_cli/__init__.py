@@ -1,5 +1,6 @@
-
+from requests_toolbelt import MultipartEncoder
 import requests
+from requests.exceptions import HTTPError
 import json
 import os
 import mimetypes
@@ -72,21 +73,29 @@ class QCentroidAgentClient:
                 logger.error(f"Error: {response.status_code} - {response.text}")
                 response.raise_for_status()
 
-        except requests.RequestException as e:
-            logger.error(f"Request failed: {e}", e)
+        except HTTPError as e:
+            logger.exception(f"Request failed: ", str(e))
             raise e            
         except Exception as e:
             # Handle any exceptions or errors here
-            logger.error(f"Unexpected Error: {e}", e)            
+            logger.exception(f"Unexpected Error: ", str(e))            
             raise e
 
     #POST [core]/agent/job/{job_name}/data/output
     def sendOutputData(self, data:dict) -> bool:
         
-        file = data2file(data)        
+        file = data2file(data)     
+        
+        headers = self.getHeaders()
+
+        m = MultipartEncoder(
+            fields={'file': ('output.json', file, 'application/json')}
+        )   
+        headers["Content-Type"] = m.content_type
+        
         
         try:
-            response = requests.post(f"{self.base_url}/agent/job/{self.name}/data/output", headers=self.getHeaders(), files={'file': ('output.json', file, 'application/json')})
+            response = requests.post(f"{self.base_url}/agent/job/{self.name}/data/output", headers=headers, data=m)
             
             # Check if the request was successful (status code 200)
             if response.status_code == 200:
@@ -98,20 +107,26 @@ class QCentroidAgentClient:
                 logger.error(f"Error: {response.status_code} - {response.text}")
                 response.raise_for_status()
 
-        except requests.RequestException as e:
-            logger.error(f"Request failed: {e}", e)
-            raise e            
+        except HTTPError as e:
+            logger.exception(f"Request failed: ", str(e))
+            raise e              
         except Exception as e:
             # Handle any exceptions or errors here
-            logger.error(f"Unexpected Error: {e}", e)
+            logger.exception(f"Unexpected Error: ", str(e))
             raise e
         
 
     #POST /agent/job/{job_name}/data/output/additional
     def sendAdditionalOutputFile(self, filename:str) -> bool:
+
         try:
             with open(filename, "rb") as file:
-                response = requests.post(f"{self.base_url}/agent/job/{self.name}/data/output/additional", headers=self.getHeaders(), files={"file": file})
+                headers=self.getHeaders()
+                m = MultipartEncoder(
+                    fields={'file': (file.name, file)}
+                )   
+                headers["Content-Type"] = m.content_type
+                response = requests.post(f"{self.base_url}/agent/job/{self.name}/data/output/additional", headers=headers, data=m)
                 if response.status_code == 200:
                     # Parse and use the response data as needed
                     data = processJsonData(response)
@@ -121,12 +136,14 @@ class QCentroidAgentClient:
                     logger.error(f"Error: {response.status_code} - {response.text}")
                     response.raise_for_status()
 
-        except requests.RequestException as e:
-            logger.error(f"Request failed: {e}", e)
-            raise e            
+        except HTTPError as e:
+            logger.exception(f"Request failed: ", str(e))
+            raise e      
+        except OSError as e:      
+            logger.exception(f"Filenotfound:{filename}", str(e))
         except Exception as e:
             # Handle any exceptions or errors here
-            logger.error(f"Unexpected Error: {e}", e)
+            logger.exception(f"Unexpected Error: ", str(e))
             raise e
 
     #GET [core]/agent/job/{job}/execution-log
@@ -134,7 +151,12 @@ class QCentroidAgentClient:
         try:
            
             with open(filename, "rb") as file:
-                response = requests.post(f"{self.base_url}/agent/job/{self.name}/execution-log", headers=self.getHeaders(), files={"file": file})
+                headers=self.getHeaders()
+                m = MultipartEncoder(
+                    fields={'file': ('output.json', file, 'application/json')}
+                )   
+                headers["Content-Type"] = m.content_type
+                response = requests.post(f"{self.base_url}/agent/job/{self.name}/execution-log", headers=headers, data=m)                
                 if response.status_code == 200:
                     # Parse and use the response data as needed
                     data = processJsonData(response)
@@ -143,17 +165,15 @@ class QCentroidAgentClient:
                 else:
                     logger.error(f"Error: {response.status_code} - {response.text}")
                     response.raise_for_status()
-                
-            
-        except FileNotFoundError as e:
-            logger.error(f"FileError: {e}", e)
-            raise e
-        except ValueError as e:
-            logger.error(f"Error: {e}", e)
-            raise e
+        except HTTPError as e:
+            logger.exception(f"Request failed: ", str(e))
+            raise e             
+        except OSError as e:
+            logger.exception(f"FileError: ", str(e))
+            raise e        
         except Exception as e:
             # Handle any other unexpected exceptions here
-            logger.error(f"Unexpected Error: {e}", e)
+            logger.exception(f"Unexpected Error: ", str(e))
             raise e        
     #GET [core]/agent/job/{job}/status
     def status(self) -> StatusEntity:
@@ -170,15 +190,13 @@ class QCentroidAgentClient:
             else:
                 logger.error(f"Error: {response.status_code} - {response.text}")
                 response.raise_for_status()
-        except FileNotFoundError as e:
-            logger.error(f"Error: {e}", e)
-            raise e
-        except ValueError as e:
-            logger.error(f"Error: {e}", e)
+        
+        except HTTPError as e:
+            logger.exception(f"Error: e", str(e))
             raise e
         except Exception as e:
             # Handle any other unexpected exceptions here
-            logger.error(f"Unexpected Error: {e}", e)
+            logger.exception(f"Unexpected Error: e", str(e))
             raise e
 
     #POST [core]/agent/job/{job}/status
@@ -196,14 +214,14 @@ class QCentroidAgentClient:
 
             return response.id
         except FileNotFoundError as e:
-            logger.error(f"Error: {e}")
+            logger.exception(f"FileNotError:", str(e))
             raise e
-        except ValueError as e:
-            logger.error(f"Error: {e}")
+        except HTTPError as e:
+            logger.exception(f"Error: ",str(e))
             raise e
         except Exception as e:
             # Handle any other unexpected exceptions here
-            logger.error(f"Unexpected Error: {e}")
+            logger.exception(f"Unexpected Error: ", str(e))
             raise e
 
     def start(self):
@@ -259,10 +277,10 @@ class QCentroidSolverClient:
                 logger.error(f"Error: {response.status_code} - {response.text}")
                 response.raise_for_status()
 
-        except requests.RequestException as e:
-            logger.error(f"Request failed: {e}", e)
+        except HTTPError as e:
+            logger.exception(f"Request failed: ", str(e))
             raise e            
         except Exception as e:
             # Handle any exceptions or errors here
-            logger.error(f"Unexpected Error: {e}", e)
+            logger.exception(f"Unexpected Error: ", str(e))
             raise e
