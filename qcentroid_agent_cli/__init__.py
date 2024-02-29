@@ -153,7 +153,7 @@ class QCentroidAgentClient:
             with open(filename, "rb") as file:
                 headers=self.getHeaders()
                 m = MultipartEncoder(
-                    fields={'file': ('output.json', file, 'application/json')}
+                    fields={'file': ('execution.log', file)}
                 )   
                 headers["Content-Type"] = m.content_type
                 response = requests.post(f"{self.base_url}/agent/job/{self.name}/execution-log", headers=headers, data=m)                
