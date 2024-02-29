@@ -45,6 +45,8 @@ def main():
     # Get the solver details
     solver = QCentroidSolverClient(API_BASE_URL, SOLVER_API_KEY, SOLVER_ID)
 
+    print(f"currentVersion:{QCentroidSolverClient.getVersion()}")
+
     # Request a queued job
     job = solver.obtainJob()
     
@@ -70,8 +72,50 @@ if __name__ == "__main__":
     main() 
 ```
 
-### Example for external agents:
+### Basic example with env variables
 
+You can use environment variables to pass the credentials:
+```bash
+export QCENTROID_PUBLIC_API="https://xxxx.xxx.xxx"
+export QCENTROID_AGENT_API_TOKEN="xxxx-yyyy-zzzzz"
+export QCENTROID_SOLVER_ID="KJHFDKSFDG"
+python main.py
+```
+
+main.py python example with env variables:
+```python
+from qcentroid_agent_cli import QCentroidSolverClient
+...
+solver = QCentroidSolverClient() #No paramethers needed
+...
+```
+
+
+### Dotenv Basic example
+
+Also can be used dotenv to load properties:
+```bash
+pip install dot-env
+```
+
+.env:
+```
+QCENTROID_PUBLIC_API="https://xxxx.xxx.xxx"
+QCENTROID_AGENT_API_TOKEN="xxxx-yyyy-zzzzz"
+QCENTROID_SOLVER_ID="KJHFDKSFDG"
+```
+
+```python
+from dotenv import load_dotenv
+from qcentroid_agent_cli import QCentroidSolverClient
+...
+load_dotenv()
+solver = QCentroidSolverClient() #No paramethers needed
+```
+
+#### Advanced Agent example
+
+Simple all-in-one python example:
 ```python
 import requests
 from qcentroid_agent_cli import QCentroidSolverClient
@@ -150,6 +194,8 @@ if __name__ == "__main__":
     main()
 
 ```
+### Own component development
+
 
 ## Versioning
 

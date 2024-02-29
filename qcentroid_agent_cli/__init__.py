@@ -6,7 +6,7 @@ import os
 import mimetypes
 from io import StringIO
 from qcentroid_agent_cli.model import Status, StatusEntity
-
+import sys
 import ssl
 import logging
 
@@ -32,6 +32,17 @@ def data2file(data:dict):
     # Convert JSON string to a BufferedReader
     return StringIO(json_data)    
 
+def obtainCurrentVersion():
+    # compatible with python 3.7 version
+    if sys.version_info >= (3, 8):
+        from importlib import metadata
+    else:
+        import importlib_metadata as metadata
+
+    if __name__:
+      return metadata.version(__name__)
+    return "unknown"
+
 class QCentroidAgentClient:
     # Init class with base parameters
     def __init__(self, base_url=None, pat=None, job_name=None):
@@ -49,6 +60,9 @@ class QCentroidAgentClient:
             self.name = job_name
         else:
             self.name = os.environ.get('EXECUTOR_ID')
+    @staticmethod
+    def getVersion()->str:
+        return obtainCurrentVersion()
             
     def getHeaders(self):
         return {
@@ -251,6 +265,10 @@ class QCentroidSolverClient:
             self.solver_id = solver_id
         else:
             self.solver_id = os.environ.get('QCENTROID_SOLVER_ID')
+            
+    @staticmethod
+    def getVersion()->str:
+        return obtainCurrentVersion()
 
     def getHeaders(self):
         return {
