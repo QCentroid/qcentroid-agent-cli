@@ -21,8 +21,7 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: ${{ matrix.python-version }}
-      - name: Install dependencies ${{ matrix.python-version }}
-        working-directory: ${{ env.FOLDER }}
+      - name: Install dependencies ${{ matrix.python-version }}        
         run: |
           python -m pip install .[test] --upgrade pip
           pip install ruff pytest
@@ -34,10 +33,9 @@ jobs:
           ruff --output-format=github --select=E9,F63,F7,F82 --target-version=py39 .
           # default set of ruff rules with GitHub Annotations
           #ruff --format=github --target-version=py37 .
-      - name: Test with pytest  ${{ matrix.python-version }}
-        working-directory: ${{ env.FOLDER }}
+      - name: Test with pytest  ${{ matrix.python-version }}        
         run: |
-          if pytest; then
+          if pytest --asyncio-mode=auto --cov-report term-missing --cov-report xml --cov qcentroid_agent_cli; then
             echo "Tests passed in $folder"
           else
             exit_code=$?
@@ -48,3 +46,6 @@ jobs:
               exit 1
             fi
           fi
+      - name: Code Coverage Report
+        if: success()
+        uses: codecov/codecov-action@v4
