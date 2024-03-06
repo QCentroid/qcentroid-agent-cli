@@ -35,7 +35,7 @@ jobs:
           #ruff check --format=github --target-version=py37 .
       - name: Test with pytest  ${{ matrix.python-version }}        
         run: |
-          if pytest --cov-report term-missing --cov-report xml --cov=qcentroid_agent_cli .; then
+          if pytest --cov-report term-missing --cov-report xml --cov qcentroid_agent_cli; then
             echo "Tests passed in $folder"
           else
             exit_code=$?
