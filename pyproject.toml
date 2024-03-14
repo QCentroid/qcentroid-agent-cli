@@ -14,7 +14,7 @@ readme = "README.md"
 packages = [{include = "qcentroid_agent_cli"}]
 homepage = "https://www.qcentroid.xyz"
 repository = "https://github.com/QCentroid/qcentroid-agent-cli"
-documentation = "https://github.com/QCentroid/qcentroid-agent-cli
+documentation = "https://github.com/QCentroid/qcentroid-agent-cli"
 
 [tool.poetry.dependencies]
 python = "^3.8"
