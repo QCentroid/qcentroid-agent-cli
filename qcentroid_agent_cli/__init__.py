@@ -72,6 +72,7 @@ class QCentroidAgentClient(QCentroidBaseClient):
             "Authorization": f"Bearer {self.pat}",
             "Accept": "application/json",  # Set the content type based on your API's requirements
             "Content-Type": "application/json",  # Set the content type based on your API's requirements
+            "Content-Encoding": "gzip",
         }
 
     #GET [core]/agent/job/{job_name}/data/input
