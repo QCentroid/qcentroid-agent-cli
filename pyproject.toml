@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "qcentroid-agent-cli"
-version = "0.3.30"
+version = "0.3.31"
 description = "Library to interact with qcentroid agent api"
 authors = [
   "QCentroid <info@qcentroid.xyz>" ]
