@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "qcentroid-agent-cli"
-version = "0.3.32"
+version = "0.3.33"
 description = "Library to interact with qcentroid agent api"
 authors = [
   "QCentroid <info@qcentroid.xyz>" ]
@@ -28,6 +28,7 @@ pytest ={version="~7.4", optional = true}
 [tool.poetry.group.test.dependencies]
 pytest = "~=7.4"
 responses = "~=0.25"
+coverage = "^7.4.3"
 
 [tool.poetry.extras]
 test = ['responses', 'pytest']
