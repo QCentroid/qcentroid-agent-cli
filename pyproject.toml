@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "qcentroid-agent-cli"
-version = "0.3.34"
+version = "0.3.35"
 description = "Library to interact with qcentroid agent api"
 authors = [
   "QCentroid <info@qcentroid.xyz>" ]
@@ -17,10 +17,6 @@ homepage = "https://www.qcentroid.xyz"
 repository = "https://github.com/QCentroid/qcentroid-agent-api"
 documentation = "https://github.com/QCentroid/qcentroid-agent-api/blob/main/README.md"
 
-[project.urls]
-Homepage = "https://github.com/QCentroid/qcentroid-agent-api"
-Issues = "https://github.com/QCentroid/qcentroid-agent-api/issues"
-
 [tool.poetry.dependencies]
 python = "^3.8"
 requests = "~=2.31"
@@ -36,7 +32,7 @@ responses = "~=0.25"
 coverage = "^7.4.3"
 
 [tool.poetry.extras]
-test = ['responses', 'pytest']
+test = ['responses', 'pytest','coverage']
 
 [build-system]
 requires = ["poetry-core"]
