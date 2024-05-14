@@ -3,6 +3,7 @@
 ![deploy to pypi](https://github.com/QCentroid/qcentroid-agent-cli/actions/workflows/publish.yml/badge.svg)
 [![Python](https://img.shields.io/pypi/pyversions/qcentroid-agent-cli.svg)](https://badge.fury.io/py/qcentroid-agent-cli)
 [![PyPI](https://badge.fury.io/py/qcentroid-agent-cli.svg)](https://badge.fury.io/py/qcentroid-agent-cli)
+ [![CodeFactor](https://www.codefactor.io/repository/github/qcentroid/qcentroid-agent-cli/badge)](https://www.codefactor.io/repository/github/qcentroid/qcentroid-agent-cli)
  
 Client library to interact with QCentroid Agent API.
 
