@@ -18,7 +18,7 @@ documentation = "https://github.com/QCentroid/qcentroid-agent-cli"
 
 [tool.poetry.dependencies]
 python = "^3.8"
-requests = "~=2.31"
+requests = "~=2.32"
 requests_toolbelt = "~=1.0"
 responses = {version = "~=0.25", optional = true}
 pytest ={version="~7.4", optional = true}
