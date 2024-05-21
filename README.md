@@ -211,3 +211,14 @@ pip install . #install the current version of the component
 python main.py #run the client version that uses the package
 ```
 
+## Commits
+
+
+```bash
+pip install pre-commit
+pre-commit install # add pre-commit hook
+... # modify the code
+git add . #add modified files
+git commit -m"some modifications" # pre-commit will be triggered to check code format
+```
+
