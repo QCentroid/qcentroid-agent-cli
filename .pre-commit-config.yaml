@@ -1,0 +1,23 @@
+repos:
+- repo: https://github.com/psf/black
+  rev: 24.3.0   # Replace with the desired black version (optional)
+  hooks:
+  - id: black
+    args: ["-l", "400"]
+- repo: https://github.com/myint/autoflake
+  rev: v2.3.1   # Replace with the desired autoflake version (optional)
+  hooks:
+  - id: autoflake
+    args: ["--remove-all-unused-imports", "--remove-unused-variables","--recursive"]
+- repo: https://github.com/pre-commit/pre-commit-hooks
+  rev: v4.5.0   # Replace with the desired version (optional)
+  hooks:
+  - id: check-json
+  - id: check-xml
+  - id: check-yaml
+  - id: check-toml
+- repo: https://github.com/Yelp/detect-secrets
+  rev: v1.5.0
+  hooks:
+  - id: detect-secrets
+    args: ['--baseline', '.secrets.baseline']
