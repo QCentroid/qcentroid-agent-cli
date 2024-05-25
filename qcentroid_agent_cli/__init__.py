@@ -276,12 +276,11 @@ class QCentroidSolverClient(QCentroidBaseClient):
             "Accept": "application/json",  # Set the content type based on your API's requirements
             "Content-Type": "application/json",  # Set the content type based on your API's requirements
         }
-    #GET [core]/agent/job/{job_name}/data/input
+    #GET [core]/agent/solver/{solver_id}/webhook
     def obtainJob(self) -> QCentroidAgentClient:
         try:
             response = requests.get(f"{self.base_url}/agent/solver/{self.solver_id}/webhook", headers=self.getHeaders())
 
-            
             if response.status_code == 200:
                 # Parse and use the response data as needed
                 data = self.__class__.processJsonData(response)
@@ -290,6 +289,32 @@ class QCentroidSolverClient(QCentroidBaseClient):
                 
                 # No jobs
             elif response.status_code == 204:                
+                return None
+            else:
+                logger.error(f"Error: {response.status_code} - {response.text}")
+                response.raise_for_status()
+
+        except HTTPError as e:
+            logger.exception(f"Request failed: ", str(e))
+            raise e            
+        except Exception as e:
+            # Handle any exceptions or errors here
+            logger.exception(f"Unexpected Error: ", str(e))
+            raise e
+        
+    #GET [core]/agent/solver/{solver_id}
+    def getSolverInfo(self) -> dict:
+        try:
+            response = requests.get(f"{self.base_url}/agent/solver/{self.solver_id}", headers=self.getHeaders())
+
+            if response.status_code == 200:
+                # Parse and use the response data as needed
+                data = self.__class__.processJsonData(response)
+                logger.info(f"API Response:{data}")
+                return data #return json
+                
+                # Solver not found
+            elif response.status_code == 404:                
                 return None
             else:
                 logger.error(f"Error: {response.status_code} - {response.text}")
