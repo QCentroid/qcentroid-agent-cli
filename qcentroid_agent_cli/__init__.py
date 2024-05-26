@@ -44,9 +44,12 @@ class QCentroidBaseClient():
         else:
             import importlib_metadata as metadata
 
-        if __name__:
-            return metadata.version(__name__)
-    
+        try:
+            if __name__:
+                return metadata.version(__name__)
+        except:
+            return "unknown"
+        
         return "unknown"
 
 class QCentroidAgentClient(QCentroidBaseClient):
