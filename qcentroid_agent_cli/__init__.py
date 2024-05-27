@@ -44,9 +44,12 @@ class QCentroidBaseClient():
         else:
             import importlib_metadata as metadata
 
-        if __name__:
-            return metadata.version(__name__)
-    
+        try:
+            if __name__:
+                return metadata.version(__name__)
+        except:
+            return "unknown"
+        
         return "unknown"
 
 class QCentroidAgentClient(QCentroidBaseClient):
@@ -254,7 +257,7 @@ class QCentroidAgentClient(QCentroidBaseClient):
 
 class QCentroidSolverClient(QCentroidBaseClient):
     # Init class with base parameters
-    def __init__(self, base_url=None, api_key=None, solver_id=None):
+    def __init__(self, base_url=None, api_key=None, solver_name=None):
         self.base_url = api_base_url #default production url
         
         if base_url is not None:
@@ -265,10 +268,10 @@ class QCentroidSolverClient(QCentroidBaseClient):
             self.api_key = api_key
         else:
             self.api_key = os.environ.get('QCENTROID_AGENT_API_TOKEN')
-        if solver_id is not None:             
-            self.solver_id = solver_id
+        if solver_name is not None:             
+            self.solver_name = solver_name
         else:
-            self.solver_id = os.environ.get('QCENTROID_SOLVER_ID')
+            self.solver_name = os.environ.get('QCENTROID_SOLVER_NAME')
 
     def getHeaders(self):
         return {
@@ -276,12 +279,11 @@ class QCentroidSolverClient(QCentroidBaseClient):
             "Accept": "application/json",  # Set the content type based on your API's requirements
             "Content-Type": "application/json",  # Set the content type based on your API's requirements
         }
-    #GET [core]/agent/job/{job_name}/data/input
+    #GET [core]/agent/solver/{solver_name}/webhook
     def obtainJob(self) -> QCentroidAgentClient:
         try:
-            response = requests.get(f"{self.base_url}/agent/solver/{self.solver_id}/webhook", headers=self.getHeaders())
+            response = requests.get(f"{self.base_url}/agent/solver/{self.solver_name}/webhook", headers=self.getHeaders())
 
-            
             if response.status_code == 200:
                 # Parse and use the response data as needed
                 data = self.__class__.processJsonData(response)
@@ -291,6 +293,33 @@ class QCentroidSolverClient(QCentroidBaseClient):
                 # No jobs
             elif response.status_code == 204:                
                 return None
+            else:
+                logger.error(f"Error: {response.status_code} - {response.text}")
+                response.raise_for_status()
+
+        except HTTPError as e:
+            logger.exception(f"Request failed: ", str(e))
+            raise e            
+        except Exception as e:
+            # Handle any exceptions or errors here
+            logger.exception(f"Unexpected Error: ", str(e))
+            raise e
+        
+    #GET [core]/agent/solver/{solver_name}
+    def getSolverInfo(self) -> dict:
+        try:
+            response = requests.get(f"{self.base_url}/agent/solver/{self.solver_name}/info", headers=self.getHeaders())
+
+            if response.status_code == 200:
+                # Parse and use the response data as needed
+                data = self.__class__.processJsonData(response)
+                logger.info(f"API Response:{data}")
+                return data #return json
+                
+                # Solver not found
+            elif response.status_code == 404:
+                logger.info(f"API Response:{response.status_code} - {response.text}")
+                response.raise_for_status()
             else:
                 logger.error(f"Error: {response.status_code} - {response.text}")
                 response.raise_for_status()
