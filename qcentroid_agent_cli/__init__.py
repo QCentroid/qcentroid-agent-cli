@@ -249,7 +249,7 @@ class QCentroidAgentClient(QCentroidBaseClient):
         self.status(StatusEntity(Status.RUNNING))
     
     def end(self):
-        self.status(StatusEntity(Status.FINISHED))
+        self.status(StatusEntity(Status.SUCCESS))
 
     def error(self, be:BaseException):        
         self.status(StatusEntity(Status.ERROR))

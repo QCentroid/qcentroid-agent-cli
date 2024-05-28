@@ -7,6 +7,7 @@ class Status(str, Enum):
     PREPARING = "PREPARING"
     ERROR = "ERROR"
     FINISHED = "FINISHED"
+    SUCCESS = "SUCCESS"
 
 class StatusEntity:
     def __init__(self, state):
